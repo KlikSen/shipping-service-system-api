@@ -9,5 +9,4 @@ class ShippingServiceSystemApiApplicationTests {
 	@Test
 	void contextLoads() {
 	}
-
 }

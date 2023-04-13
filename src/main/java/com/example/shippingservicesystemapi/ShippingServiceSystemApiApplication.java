@@ -1,13 +1,13 @@
 package com.example.shippingservicesystemapi;
 
+import com.example.shippingservicesystemapi.repository.UserRepository;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.boot.autoconfigure.jdbc.*;
-@SpringBootApplication(exclude = DataSourceAutoConfiguration.class)
+
+@SpringBootApplication
 public class ShippingServiceSystemApiApplication {
 
 	public static void main(String[] args) {
 		SpringApplication.run(ShippingServiceSystemApiApplication.class, args);
 	}
-
 }
