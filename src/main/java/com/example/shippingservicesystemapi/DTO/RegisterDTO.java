@@ -1,19 +1,18 @@
 package com.example.shippingservicesystemapi.DTO;
 
 import com.example.shippingservicesystemapi.enumeration.UserRole;
-import com.fasterxml.jackson.annotation.JsonFormat;
-import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
-import lombok.*;
-import java.time.LocalDateTime;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
 @Data
-@AllArgsConstructor
 @NoArgsConstructor
-public class UserDTO{
-    private Long id;
+@AllArgsConstructor
+public class RegisterDTO {
     @NotBlank
     private String firstName;
     @NotBlank
@@ -24,9 +23,4 @@ public class UserDTO{
     private String password;
     @NotNull
     private UserRole userRole;
-    @JsonFormat(pattern="yyyy-MM-dd HH:mm:ss")
-    @JsonProperty(value = "registerTime", access = JsonProperty.Access.READ_ONLY)
-    private LocalDateTime registerTime;
-    @JsonProperty(value = "emailVerification", access = JsonProperty.Access.READ_ONLY)
-    private boolean emailVerification;
 }
