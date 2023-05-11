@@ -2,7 +2,6 @@ package com.example.shippingservicesystemapi.resource;
 
 import com.example.shippingservicesystemapi.DTO.UserDTO;
 import com.example.shippingservicesystemapi.service.UserService;
-import com.example.shippingservicesystemapi.service.implementation.UserServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.HttpStatus;
