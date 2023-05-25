@@ -12,6 +12,16 @@ spring:
     username: root
     url: jdbc:mysql://localhost:3306/shippingdb
     password: '20042004'
+  mail:
+    properties:
+      mail:
+        smtp:
+          starttls:
+            enable: 'true'
+    host: smtp.gmail.com
+    username: fedykvitalik2004@gmail.com
+    password: fknsuquywrqrvvsc
+    port: '587'
 
 constants:
   secret-key: "472B4B6250655368566B5970337336763979244226452948404D635166546A576E5A7134743777217A25432A462D4A614E645267556B58703273357538782F41"

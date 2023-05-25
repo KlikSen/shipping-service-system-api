@@ -1,4 +1,4 @@
-package com.example.shippingservicesystemapi.DTO;
+package com.example.shippingservicesystemapi.dto;
 
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotEmpty;

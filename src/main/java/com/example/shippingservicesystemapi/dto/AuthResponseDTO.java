@@ -1,7 +1,9 @@
-package com.example.shippingservicesystemapi.DTO;
+package com.example.shippingservicesystemapi.dto;
 
 import lombok.Data;
+import lombok.Getter;
 import lombok.RequiredArgsConstructor;
+import lombok.Setter;
 
 @Data
 @RequiredArgsConstructor

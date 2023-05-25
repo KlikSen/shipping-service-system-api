@@ -75,7 +75,7 @@ public class User implements UserDetails {
     }
 
     @Override
-    public boolean isEnabled() { //todo
-        return true;
-    } //todo remove true. It is checked based upon emailVerification
+    public boolean isEnabled() {
+        return emailVerification;
+    }
 }

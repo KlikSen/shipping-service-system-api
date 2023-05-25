@@ -1,4 +1,4 @@
-package com.example.shippingservicesystemapi.DTO;
+package com.example.shippingservicesystemapi.dto;
 
 import com.example.shippingservicesystemapi.enumeration.UserRole;
 import com.fasterxml.jackson.annotation.JsonFormat;
