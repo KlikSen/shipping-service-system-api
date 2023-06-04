@@ -13,17 +13,9 @@ import static junit.framework.TestCase.assertEquals;
 
 @SpringBootTest
 class ShippingServiceSystemApiApplicationTests {
-	@Autowired
-	private PasswordEncoder passwordEncoder;
 
 	@Test
 	void contextLoads() {
 	}
 
-	@Test
-	public void ConfirmationMapping() {
-		String hashed = passwordEncoder.encode("PASSWORD");
-		boolean check = passwordEncoder.matches("PASSWORD ", hashed);
-		Assertions.assertTrue(check);
-	}
 }

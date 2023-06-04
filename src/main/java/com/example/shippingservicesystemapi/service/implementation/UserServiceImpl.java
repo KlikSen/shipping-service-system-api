@@ -43,16 +43,19 @@ public class UserServiceImpl implements UserService {
     @Override
     public UserDTO update(final UserDTO userDTO) {
         final User user = userMapper.toEntity(userDTO);
-        user.setRegisterTime(userRepository.findById(user.getId()).map(User::getRegisterTime).orElseThrow()); //value in the db, which cannot be changed by the function mapper
-        //TODO: password encoding etc
-        final boolean emailVerification = userRepository.findById(user.getId()).map(User::isEmailVerification).orElseThrow();  // value of emailVerification in db currently
-        final boolean emailEquality = userRepository.findById(user.getId()).map(User::getEmail).orElseThrow().equals(user.getEmail()); //if email in db and dto are same
+        final User userFromDatabase = userRepository.findById(user.getId())
+                .orElseThrow(() -> new IllegalStateException("User not found by id"));
+        user.setPassword(passwordEncoder.encode(user.getPassword()));
+        user.setRegisterTime(userFromDatabase.getRegisterTime());
+
+        final boolean emailVerification = userFromDatabase.isEmailVerification();  // value of emailVerification in db currently
+        final boolean emailEquality = userFromDatabase.getEmail().equals(user.getEmail()); //if email in db and dto are same
         user.setEmailVerification(emailEquality && emailVerification);
         return userMapper.toDTO(userRepository.save(user));
     }
     @Override
     public void delete(final Long id) {
-        userRepository.delete(userRepository.findById(id).orElseThrow());  //if it were deleteById, it would be impossible to retrieve the right answer
+        userRepository.deleteById(id);
     }
 
     @Override

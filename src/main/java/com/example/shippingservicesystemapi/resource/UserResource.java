@@ -15,7 +15,6 @@ import java.util.List;
 @RequestMapping("api/user")
 public class UserResource {
     @Autowired
-    @Qualifier(value = "userServiceImpl")
     private UserService userService;
 
     @PostMapping(path = "/create")
@@ -25,8 +24,8 @@ public class UserResource {
     }
 
     @GetMapping("/{id}")
-    public UserDTO read(@PathVariable("id") final Long id) {
-        return userService.read(id);
+    public ResponseEntity<UserDTO> read(@PathVariable("id") final Long id) {
+        return ResponseEntity.ok(userService.read(id));
     }
 
     @PutMapping("/update")
@@ -41,7 +40,7 @@ public class UserResource {
     }
 
     @GetMapping("/all")
-    public List<UserDTO> readAll(){
-        return userService.readAll();
+    public ResponseEntity<List<UserDTO>> readAll(){
+        return ResponseEntity.ok(userService.readAll());
     }
 }
