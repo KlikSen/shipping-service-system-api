@@ -9,15 +9,14 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import java.net.http.HttpRequest;
 import java.util.Objects;
 
 @Service
 @AllArgsConstructor
+@Transactional
 public class AuthServiceImpl implements AuthService {
     private UserMapper userMapper; //needed for converting from registerDTO to userDTO
     private ConfirmationService confirmationService;
@@ -25,38 +24,24 @@ public class AuthServiceImpl implements AuthService {
     private EmailSenderService emailSenderService;
     private JwtService jwtService;
     private PasswordEncoder passwordEncoder;
-
-    @Override
-    @Transactional
-    public void register(RegisterDTO registerDTO) {
-        final UserDTO userDTO = userService.create(userMapper.toDTO(registerDTO));
-
-        //generating a 15-minute token
-        ConfirmationDTO confirmationDTO = confirmationService.create(userDTO);
-
-        //sending an email
-        final String link = "http://localhost:8080/confirm?token=".concat(confirmationDTO.getToken()); //the link is temporary
-        final String content = EmailTemplate.contentForEmailConfirmation(userDTO.getFirstName(), link);
-        emailSenderService.send(userDTO.getEmail(), content);
-    }
+    private final String emailConfirmationURL = "http://localhost:8080/confirm?token=";
 
     @Override
     public JwtDTO login(final LoginDTO loginDTO) {
-        final UserDetails userDetails = userMapper.toEntity(userService.readByEmail(loginDTO.getEmail()));
+        final User user = userMapper.toEntity(userService.readByEmail(loginDTO.getEmail()));
 
-        if (Objects.nonNull(userDetails) &&
-                passwordEncoder.matches(loginDTO.getPassword(), userDetails.getPassword())) {
-            UserDTO userDTO = userMapper.toDTO((User) userDetails);
-            if (!userDetails.isEnabled()) {
-                ConfirmationDTO confirmationDTO = confirmationService.create(userDTO);
+        if (Objects.nonNull(user) &&
+                passwordEncoder.matches(loginDTO.getPassword(), user.getPassword())) {
+            if (!user.isEnabled()) {
+                ConfirmationDTO confirmationDTO = confirmationService.create(user);
 
-                final String link = "http://localhost:8080/confirm?token=".concat(confirmationDTO.getToken()); //the link is temporary
-                final String content = EmailTemplate.contentForEmailConfirmation(userDTO.getFirstName(), link);
-                emailSenderService.send(userDTO.getEmail(), content);
+                final String link = emailConfirmationURL.concat(confirmationDTO.getToken()); //the link is temporary
+                final String content = EmailTemplate.contentForEmailConfirmation(user.getFirstName(), link);
+                emailSenderService.send(user.getEmail(), content);
 
                 throw new IllegalStateException("Confirmation of email required!");
             }
-            String token = jwtService.generateJwt(userDTO);
+            String token = jwtService.generateJwt(user);
             return new JwtDTO(token);
         }
         throw new IllegalStateException("Error has occurred during login process");

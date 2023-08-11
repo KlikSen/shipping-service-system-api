@@ -2,6 +2,7 @@ package com.example.shippingservicesystemapi.service.implementation;
 
 import com.example.shippingservicesystemapi.dto.UserDTO;
 import com.example.shippingservicesystemapi.entity.Jwt;
+import com.example.shippingservicesystemapi.entity.User;
 import com.example.shippingservicesystemapi.mapper.UserMapper;
 import com.example.shippingservicesystemapi.repository.JwtTokenRepository;
 import com.example.shippingservicesystemapi.service.JwtService;
@@ -32,13 +33,13 @@ public class JwtServiceImpl implements JwtService {
     private UserMapper userMapper;
 
     @Override
-    public String generateJwt(final UserDTO userDTO) {
+    public String generateJwt(final User user) {
         LocalDateTime currentDate = LocalDateTime.now();  //current date
         Date expirationDate = Date.from(currentDate.plusDays(interim).atZone(ZoneId.systemDefault()).toInstant()); //current date + interim
 
         Claims additionalClaims = Jwts.claims();
-        additionalClaims.setSubject(userDTO.getEmail());
-        additionalClaims.put("userRole", userDTO.getUserRole());
+        additionalClaims.setSubject(user.getEmail());
+        additionalClaims.put("userRole", user.getUserRole());
 
         String token = Jwts.builder()
                 .setHeaderParam("alg", "HS512")
@@ -51,7 +52,7 @@ public class JwtServiceImpl implements JwtService {
 
         Jwt jwt = new Jwt()
                 .setToken(token)
-                .setUser(userMapper.toEntity(userDTO));
+                .setUser(user);
 
         jwtTokenRepository.save(jwt);
 
@@ -74,23 +75,6 @@ public class JwtServiceImpl implements JwtService {
     @Override
     public void deleteJwt(String token) {
         jwtTokenRepository.deleteByToken(token);
-    }
-
-    @Override
-    public void deleteJwtByUserId(Long userId) {
-        jwtTokenRepository.deleteJwtByUserId(userId);
-    }
-
-    @Override
-    public List<String> getJwtByUserId(Long userId) {
-        return jwtTokenRepository.findByUser(userId).stream()
-                .map(o -> o.getToken())
-                .collect(Collectors.toList());
-    }
-
-    @Override
-    public UserDTO getUser(String token) {
-        return userMapper.toDTO(jwtTokenRepository.findByToken(token).getUser());
     }
 
     @Override

@@ -2,13 +2,13 @@ package com.example.shippingservicesystemapi.resource;
 
 import com.example.shippingservicesystemapi.dto.JwtDTO;
 import com.example.shippingservicesystemapi.dto.LoginDTO;
-import com.example.shippingservicesystemapi.dto.RegisterDTO;
 import com.example.shippingservicesystemapi.service.AuthService;
 import com.example.shippingservicesystemapi.service.ConfirmationService;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
@@ -25,13 +25,8 @@ public class AuthResource {
         return new ResponseEntity<>(authResponse, HttpStatus.OK);
     }
 
-    @PostMapping("/register")
-    public ResponseEntity<String> register(@RequestBody @Validated final RegisterDTO registerDTO) {
-        authService.register(registerDTO);
-        return ResponseEntity.ok("Registered successfully");
-    }
-
     @PostMapping( "/do_logout")
+    @PreAuthorize("isFullyAuthenticated()")
     public ResponseEntity<String> logout(final HttpServletRequest httpServletRequest) {
         authService.logout(httpServletRequest);
         return ResponseEntity.ok("Successful logout");

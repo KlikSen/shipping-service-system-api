@@ -15,7 +15,7 @@ public class Jwt {
     private Long id;
     @Column(name = "token")
     private String token;
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
     private User user;
 }
